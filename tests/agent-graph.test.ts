@@ -120,5 +120,5 @@ test('a later written decision supersedes an earlier held one: shown first, out 
   assert.equal((st.records[1] as { supersededBy?: string }).supersededBy, w.id);
   assert.equal(h.status, 'held');
   assert.equal((await listHeld(d)).length, 0);
-  assert.match(await explainHold(d, { issueKey: bad.ticket.key }), /latest TicketGate decision is WRITTEN/);
+  assert.match(await explainHold(d, { issueKey: bad.ticket.key }), /latest Ticket Contracts decision is WRITTEN/);
 });

@@ -27,14 +27,14 @@ async function safe<T>(fn: () => Promise<T>): Promise<T | string> {
   try {
     return await fn();
   } catch (e) {
-    return `TicketGate error: ${(e as Error).message}`;
+    return `Ticket Contracts error: ${(e as Error).message}`;
   }
 }
 
 export const readTicketForFields = (p: ActionPayload) =>
   safe(async () => {
     const r = await readTicket(forgeDeps, { issueKey: issueKeyOf(p) });
-    console.log(`ticketgate read ${r.issueKey}`);
+    console.log(`ticket-contracts read ${r.issueKey}`);
     return r;
   });
 
@@ -45,7 +45,7 @@ export const proposeTicketFields = (p: ActionPayload) =>
     const issueKey = issueKeyOf(p);
     const notRead = await checkRead(forgeDeps, issueKey, p.readId);
     if (notRead) {
-      console.log(`ticketgate propose refused ${issueKey}: ${notRead}`);
+      console.log(`ticket-contracts propose refused ${issueKey}: ${notRead}`);
       return readFirstReply(issueKey, notRead);
     }
     return agentReply((await proposeFields(forgeDeps, { issueKey, fields: p.fields, agent: p.agentName, source: sourceOf(p) })).record);

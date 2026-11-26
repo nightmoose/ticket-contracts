@@ -39,7 +39,7 @@ export interface GuardResult {
   fieldStatus: Record<string, 'ok' | 'held' | 'masked'>;
 }
 
-export interface TicketGateExtension {
+export interface TicketContractsExtension {
   nullable: string[];
   grounded: string[];
   rules: NullUnlessRule[];

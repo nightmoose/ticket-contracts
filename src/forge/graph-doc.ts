@@ -1,4 +1,4 @@
-// Turns a TicketGate decision record into a Teamwork Graph document object. Pure (no Forge
+// Turns a Ticket Contracts decision record into a Teamwork Graph document object. Pure (no Forge
 // imports), so it is unit-tested. The document deliberately carries NO ticket values: no field
 // values, amounts, order refs, PII or evidence snippets. Only the decision, the contract, which
 // fields passed/masked/held and which check failed. The values stay in the app's own storage.
@@ -6,6 +6,8 @@ import type { ProvenanceRecord } from './service';
 
 export const DOC_TYPE = 'atlassian:document';
 export const DOC_PREFIX = 'ticketgate-decision-';
+/** Bump (0-99) when the document's wording changes, so re-pushing replaces existing documents. 1 = rename to Ticket Contracts. */
+export const DOC_REVISION = 1;
 
 export interface GraphDocument {
   schemaVersion: string;
@@ -31,7 +33,7 @@ export function decisionText(r: ProvenanceRecord): string {
   const res = r.result;
   const by = (s: string) => Object.entries(res.fieldStatus).filter(([, v]) => v === s).map(([f]) => f);
   const lines = [
-    `TicketGate decision for ${r.issueKey}: ${r.status.toUpperCase()}.`,
+    `Ticket Contracts decision for ${r.issueKey}: ${r.status.toUpperCase()}.`,
     `Proposed by ${r.agent} via ${r.source} at ${r.at}, checked against contract ${res.contract.name}@${res.contract.version}.`,
   ];
   const passed = Object.keys(res.fieldStatus).filter((f) => res.fieldStatus[f] !== 'held');
@@ -49,12 +51,13 @@ export function decisionText(r: ProvenanceRecord): string {
 
 export function decisionDocument(r: ProvenanceRecord, siteUrl: string): GraphDocument {
   const updated = r.resolvedAt ?? r.at;
-  const seq = Date.parse(updated) || Date.now();
+  // Last write wins by sequence number: time-ordered, with the wording revision in the low digits.
+  const seq = (Date.parse(updated) || Date.now()) * 100 + DOC_REVISION;
   return {
     schemaVersion: '2.0',
     id: docId(r.id),
     updateSequenceNumber: seq,
-    displayName: `TicketGate decision ${r.issueKey}: ${r.status}`,
+    displayName: `Ticket Contracts decision ${r.issueKey}: ${r.status}`,
     description: `${r.status.toUpperCase()} proposal from ${r.agent} for ${r.issueKey} (${r.result.violations.length} problem${r.result.violations.length === 1 ? '' : 's'})`,
     url: `${siteUrl.replace(/\/$/, '')}/browse/${encodeURIComponent(r.issueKey)}`,
     createdAt: r.at,
@@ -64,7 +67,7 @@ export function decisionDocument(r: ProvenanceRecord, siteUrl: string): GraphDoc
     'atlassian:document': {
       type: { category: 'DOCUMENT', mimeType: 'text/plain' },
       content: { mimeType: 'text/plain', text: decisionText(r) },
-      labels: ['ticketgate', `ticketgate-${r.status}`, r.result.contract.name],
+      labels: ['ticket-contracts', `ticket-contracts-${r.status}`, r.result.contract.name],
     },
   };
 }

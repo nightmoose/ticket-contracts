@@ -30,9 +30,9 @@ Work in progress for Codegeist 2026.
 |---|---|
 | Guard core (`src/guard`): contract, grounding and PII checks | done, unit-tested |
 | Write path, held queue, provenance (`src/forge/service.ts`) | done, tested with in-memory fakes |
-| Forge wiring: Rovo agent and actions, `rovo:mcp`, issue panel, admin page, issue-created scan | written. The manifest validates offline. Not yet deployed. |
-| Teamwork Graph connector and queries | not started |
-| Deployed to a Forge dev site | not yet |
+| Forge wiring: Rovo agent and actions, `rovo:mcp`, issue panel, admin page, issue-created scan | deployed to a development site; write path and scan verified against real Jira + KVS |
+| Teamwork Graph read (panel: other tickets from this reporter) | deployed, not yet viewed in a browser |
+| Teamwork Graph connector (write) | not started |
 
 ## Forge modules
 
@@ -65,7 +65,14 @@ npm run ci             # everything CI runs
 ```
 
 Deploying needs the Forge CLI logged in to an Atlassian developer account:
-`forge register`, `forge deploy`, `forge install`.
+`forge deploy -e development`, then `forge install --demo-site -p Jira -e development`.
+
+Demo data: `JIRA_SITE=... JIRA_EMAIL=... JIRA_TOKEN=... node scripts/seed-demo.mjs SUP` creates the
+fixture tickets in a service project.
+
+The `ticketgate-selftest` web trigger is a development-only smoke test. It needs the encrypted
+`TG_SELFTEST_KEY` Forge variable and refuses every request without it. It will be removed before
+the production deploy.
 
 ## Contracts
 

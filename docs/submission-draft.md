@@ -11,6 +11,8 @@ company names, or how the app was built, in public materials.
 
 **Project name:** Ticket Contracts
 
+**Publisher:** NightMoose
+
 **Tagline:** Agents read context. Who checks what they write?
 
 **Built with / technologies:** Atlassian Forge, Jira Service Management, Jira, Rovo, Rovo
@@ -151,8 +153,9 @@ If it does not, either omit this bonus or note that the listing is in progress.]
 [MARKETPLACE_OR_REVIEW_TICKET_URL]
 
 The listing is drafted in `docs/marketplace-listing.md`. It is a free listing of Ticket
-Contracts. The review-ticket link is enough for this bonus if the live listing is not up
-yet.
+Contracts, published by NightMoose (legal entity on Marketplace verification forms:
+NightMoose, Inc.). The review-ticket link is enough for this bonus if the live listing is
+not up yet.
 
 ## Video notes
 

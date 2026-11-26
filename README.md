@@ -32,8 +32,8 @@ Work in progress for Codegeist 2026.
 | Write path, held queue, provenance (`src/forge/service.ts`) | done, tested with in-memory fakes |
 | Forge wiring: Rovo agent and actions, `rovo:mcp`, issue panel, admin page, issue-created scan | deployed to a development site; write path and scan verified against real Jira + KVS |
 | Teamwork Graph read (panel: other tickets from this reporter) | deployed and seen in a browser |
-| Teamwork Graph connector (write): a provenance document per decision | deployed; graph API reachable; waits for an admin to connect it (see [docs/teamwork-graph.md](docs/teamwork-graph.md)) |
-| Rovo agent | invokes the actions in Rovo Chat; reads the ticket first and relays held/written reasons (see [docs/rovo-agent.md](docs/rovo-agent.md)) |
+| Teamwork Graph connector (write): a provenance document per decision | connected on the dev site; all stored decisions backfilled and read back from the graph; new decisions pushed live (see [docs/teamwork-graph.md](docs/teamwork-graph.md)) |
+| Rovo agent | invokes the actions in Rovo Chat and relays held/written reasons; read-before-propose is enforced with a readId (see [docs/rovo-agent.md](docs/rovo-agent.md)) |
 
 ## Forge modules
 

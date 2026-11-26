@@ -62,7 +62,7 @@ export function decisionDocument(r: ProvenanceRecord, siteUrl: string): GraphDoc
     permissions: [{ accessControls: [{ principals: [{ type: 'ATLASSIAN_WORKSPACE' }] }] }],
     associations: { lastUpdatedAt: updated, updateSequenceNumber: seq, set: [{ associationType: 'issueIdOrKeys', values: [r.issueKey] }] },
     'atlassian:document': {
-      type: { category: 'document', mimeType: 'text/plain' },
+      type: { category: 'DOCUMENT', mimeType: 'text/plain' },
       content: { mimeType: 'text/plain', text: decisionText(r) },
       labels: ['ticketgate', `ticketgate-${r.status}`, r.result.contract.name],
     },

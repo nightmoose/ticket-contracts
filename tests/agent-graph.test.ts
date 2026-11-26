@@ -90,3 +90,35 @@ test('graph document carries the decision but no ticket values or PII', async ()
   assert.match(decisionDocument(h, 'https://x').displayName, /held/);
   assert.match(decisionDocument(h, 'https://x')['atlassian:document'].content.text, /order_ref failed the grounding check/);
 });
+
+test('read-before-propose: readId from readTicket is accepted, a made-up or missing one is refused', async () => {
+  const ok = fx('es-refund-pass');
+  const d = deps([asIssue(ok)]);
+  const { checkRead, readFirstReply } = await import('../src/forge/service');
+  assert.match(String(await checkRead(d, ok.ticket.key, undefined)), /no readId/);
+  assert.match(String(await checkRead(d, ok.ticket.key, 'abc-made-up')), /no readId/);
+  const t = await readTicket(d, { issueKey: ok.ticket.key });
+  assert.equal(await checkRead(d, ok.ticket.key, t.readId), null);
+  assert.match(String(await checkRead(d, 'OTHER-1', t.readId)), /no readId/);
+  const r = readFirstReply(ok.ticket.key, 'x');
+  assert.equal(r.decision, 'NOT_CHECKED');
+  assert.match(r.nextStep, /read-ticket-for-fields/);
+});
+
+test('a later written decision supersedes an earlier held one: shown first, out of the review queue', async () => {
+  const { issueState, listHeld, explainHold } = await import('../src/forge/service');
+  const bad = fx('es-refund-invented-order');
+  const good = fx('es-refund-fixed');
+  let t = 0;
+  const d = deps([asIssue(bad)]);
+  d.now = () => new Date(Date.UTC(2026, 11, 1, 12, 0, t++)).toISOString();
+  const h = (await proposeFields(d, { issueKey: bad.ticket.key, fields: bad.proposal })).record;
+  assert.equal((await listHeld(d)).length, 1);
+  const w = (await proposeFields(d, { issueKey: bad.ticket.key, fields: good.proposal })).record;
+  const st = await issueState(d, bad.ticket.key);
+  assert.equal(st.records[0].id, w.id);
+  assert.equal((st.records[1] as { supersededBy?: string }).supersededBy, w.id);
+  assert.equal(h.status, 'held');
+  assert.equal((await listHeld(d)).length, 0);
+  assert.match(await explainHold(d, { issueKey: bad.ticket.key }), /latest TicketGate decision is WRITTEN/);
+});

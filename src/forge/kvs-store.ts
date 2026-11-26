@@ -8,6 +8,7 @@ import type { PiiFinding } from '../guard';
 //   held              string[]  ids of records currently held, capped
 //   contract:<name>   string    admin-edited contract YAML (falls back to bundled)
 //   scan:<key>        { pii, at }
+//   read:<key>        { id, at }[]  recent read-ticket-for-fields calls, capped at 10
 const ISSUE_CAP = 25;
 const HELD_CAP = 200;
 
@@ -46,6 +47,13 @@ export const kvsStore: Store = {
   },
   async getScan(issueKey: string) {
     return kvs.get<{ pii: PiiFinding[]; at: string }>(`scan:${issueKey}`);
+  },
+  async saveRead(issueKey: string, read: { id: string; at: string }) {
+    const reads = (await kvs.get<{ id: string; at: string }[]>(`read:${issueKey}`)) ?? [];
+    await kvs.set(`read:${issueKey}`, [read, ...reads].slice(0, 10));
+  },
+  async getReads(issueKey: string) {
+    return (await kvs.get<{ id: string; at: string }[]>(`read:${issueKey}`)) ?? [];
   },
 };
 

@@ -33,7 +33,7 @@ through as normal. The outcome of the last push is kept for diagnosis.
 2. Next to the **TicketGate** connector, click **Connect**, give it a nickname, accept, and
    save. No form fields are needed.
 3. Atlassian calls `onConnectionChange` (CREATED). TicketGate stores the connection id and pushes
-   its 100 most recent decisions to the graph. From then on, every new decision is pushed as it
+   every stored decision (up to 500, in batches of 100) to the graph. From then on, every new decision is pushed as it
    happens.
 
 Disconnecting (DELETED) clears the stored connection. Atlassian deletes the ingested documents.
@@ -41,6 +41,7 @@ Disconnecting (DELETED) clears the stored connection. Atlassian deletes the inge
 ### Checking it (dev site only)
 
 The key-gated dev self-test has `op=graph-status` (connection and last push), `op=graph-get`
-(reads a decision document back by id), `op=graph-backfill` and `op=graph-probe`. Before an
+(reads a decision document back by id), `op=graph-list` (every decision for an issue, and whether
+its document is in the graph), `op=graph-backfill` and `op=graph-probe`. Before an
 admin connects, `graph-probe` returns `400 Invalid connectionId format` from the graph connector
 API. That proves the API and scopes are reachable.

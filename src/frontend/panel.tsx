@@ -8,7 +8,7 @@ type Status = 'written' | 'held' | 'released' | 'rejected';
 interface Violation { check: string; field: string; message: string }
 interface Evidence { field: string; value: string | number; snippet: string }
 interface Rec {
-  id: string; agent: string; source: string; at: string; status: Status;
+  id: string; agent: string; source: string; at: string; status: Status; supersededBy?: string; resolvedAt?: string;
   result: { decision: string; contract: { name: string; version: string }; violations: Violation[]; evidence: Evidence[]; fields: Record<string, unknown>; fieldStatus: Record<string, string> };
 }
 interface Related { ok: boolean; items: { key: string; summary: string }[]; note?: string }
@@ -62,7 +62,13 @@ function App() {
   const [related, setRelated] = useState<Related | null>(null);
   useEffect(() => { call<Related>('getRelated').then(setRelated).catch(() => setRelated({ ok: false, items: [], note: 'Teamwork Graph unavailable' })); }, []);
   const load = () => call<State>('getIssueState').then(setState).catch((e) => setError(String(e)));
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    // A Rovo write lands while the panel is open, so re-check quietly for a few minutes.
+    let n = 0;
+    const t = setInterval(() => { if (++n > 20) clearInterval(t); else load(); }, 15000);
+    return () => clearInterval(t);
+  }, []);
   const onResolve = (recordId: string, action: 'release' | 'reject') =>
     call('resolveHeld', { recordId, action }).then(load).catch((e) => setError(String(e)));
 
@@ -76,6 +82,10 @@ function App() {
           <Text>{[...new Set(state.scan.pii.map((p) => p.kind))].join(', ')}. Agents' writes are masked before they land.</Text>
         </SectionMessage>
       )}
+      <Inline space="space.100" alignBlock="center" spread="space-between">
+        <Heading size="xsmall">Latest decision</Heading>
+        <Button appearance="subtle" onClick={() => { setState(null); load(); }}>Refresh</Button>
+      </Inline>
       {!latest && <Text>No agent proposals yet. Ask the Ticket Intake agent to fill this ticket's fields.</Text>}
       {latest && <RecordView rec={latest} onResolve={onResolve} />}
       <Stack space="space.050">
@@ -87,7 +97,12 @@ function App() {
       {older.length > 0 && (
         <Box>
           <Heading size="xsmall">Earlier proposals</Heading>
-          {older.map((r) => <Text key={r.id}>{r.at} · {r.agent} · {r.status} · {r.result.violations.length} issue(s)</Text>)}
+          {older.map((r) => (
+            <Inline key={r.id} space="space.100" alignBlock="center">
+              <Lozenge appearance={r.supersededBy ? 'default' : appearance[r.status]}>{r.supersededBy ? 'superseded' : r.status}</Lozenge>
+              <Text>{r.resolvedAt ?? r.at} · {r.agent} · {r.result.violations.length} issue(s)</Text>
+            </Inline>
+          ))}
         </Box>
       )}
     </Stack>

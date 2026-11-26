@@ -1,5 +1,5 @@
 // Rovo action handlers. The same actions back the Rovo agent and the rovo:mcp tools.
-import { agentReply, explainHold, listHeld, proposeFields, readTicket, validateOnly } from './service';
+import { agentReply, checkRead, explainHold, listHeld, proposeFields, readFirstReply, readTicket, validateOnly } from './service';
 import { forgeDeps } from './forge-deps';
 
 interface ActionPayload {
@@ -7,6 +7,7 @@ interface ActionPayload {
   fields?: string;
   agentName?: string;
   recordId?: string;
+  readId?: string;
   context?: { jira?: { issueKey?: string }; [k: string]: unknown };
   [k: string]: unknown;
 }
@@ -30,10 +31,25 @@ async function safe<T>(fn: () => Promise<T>): Promise<T | string> {
   }
 }
 
-export const readTicketForFields = (p: ActionPayload) => safe(() => readTicket(forgeDeps, { issueKey: issueKeyOf(p) }));
+export const readTicketForFields = (p: ActionPayload) =>
+  safe(async () => {
+    const r = await readTicket(forgeDeps, { issueKey: issueKeyOf(p) });
+    console.log(`ticketgate read ${r.issueKey}`);
+    return r;
+  });
 
+// Proposals must follow a read-ticket-for-fields call for the same work item (enforced, not just
+// prompted): an agent that skips the read gets NOT_CHECKED and nothing is written or recorded.
 export const proposeTicketFields = (p: ActionPayload) =>
-  safe(async () => agentReply((await proposeFields(forgeDeps, { issueKey: issueKeyOf(p), fields: p.fields, agent: p.agentName, source: sourceOf(p) })).record));
+  safe(async () => {
+    const issueKey = issueKeyOf(p);
+    const notRead = await checkRead(forgeDeps, issueKey, p.readId);
+    if (notRead) {
+      console.log(`ticketgate propose refused ${issueKey}: ${notRead}`);
+      return readFirstReply(issueKey, notRead);
+    }
+    return agentReply((await proposeFields(forgeDeps, { issueKey, fields: p.fields, agent: p.agentName, source: sourceOf(p) })).record);
+  });
 
 export const checkTicketFields = (p: ActionPayload) =>
   safe(async () => {

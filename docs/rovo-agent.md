@@ -8,6 +8,18 @@ fields, allowed values and grounding rules. The prompt forbids values from memor
 or examples. It also says `ticket_id` is the customer's reference in the text (e.g. `T-6060`),
 not the Jira key.
 
+### Enforced, not just prompted
+
+In the first Rovo Chat run after the read action was added, the agent skipped it. It went straight
+to the write, using the ticket Rovo had attached as chat context. It got the fields right that
+time, but a prompt alone can't guarantee the read.
+
+So `read-ticket-for-fields` now returns a `readId`, and `propose-ticket-fields` requires it. The
+readId must have been issued for the same work item within the last hour. A missing or made-up
+readId gets `decision: NOT_CHECKED`: nothing is checked, written or recorded, and `nextStep` tells
+the agent to read first. The cost is one wasted confirm card if the agent skips the read anyway.
+The read action's name says it is required, and the prompt opens with the rule.
+
 ## Replies the agent can relay
 
 `propose-ticket-fields` returns JSON:

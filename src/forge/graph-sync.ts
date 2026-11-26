@@ -2,15 +2,13 @@
 // work item. Needs an admin to connect the "TicketGate" connector once (Atlassian Administration >
 // Apps > Connected apps > TicketGate > Connections). Until then pushes are skipped, never fatal.
 import api, { route } from '@forge/api';
-import { kvs } from '@forge/kvs';
+import { kvs, WhereConditions } from '@forge/kvs';
 import { graph } from '@forge/teamwork-graph';
 import type { ProvenanceRecord } from './service';
 import { DOC_TYPE, decisionDocument, docId } from './graph-doc';
 
 const CONN_KEY = 'twg:connection';
 const LAST_KEY = 'twg:last';
-const RECENT_KEY = 'twg:recent';
-const RECENT_CAP = 100;
 
 export interface GraphPushResult { at: string; ok: boolean; skipped?: string; accepted?: number; rejected?: unknown[]; error?: string; ids?: string[] }
 
@@ -25,12 +23,6 @@ async function getSiteUrl(): Promise<string> {
 
 export async function getConnection() {
   return kvs.get<{ connectionId: string; name: string; at: string }>(CONN_KEY);
-}
-
-async function remember(recordId: string) {
-  const ids = ((await kvs.get<string[]>(RECENT_KEY)) ?? []).filter((x) => x !== recordId);
-  ids.unshift(recordId);
-  await kvs.set(RECENT_KEY, ids.slice(0, RECENT_CAP));
 }
 
 export async function pushRecords(records: ProvenanceRecord[]): Promise<GraphPushResult> {
@@ -63,7 +55,6 @@ export async function pushRecords(records: ProvenanceRecord[]): Promise<GraphPus
 /** Called after every decision is saved. Never throws: the gate must not depend on the graph. */
 export async function onDecision(r: ProvenanceRecord) {
   try {
-    await remember(r.id);
     await pushRecords([r]);
   } catch (e) {
     console.log(`ticketgate twg push error: ${(e as Error).message}`);
@@ -80,11 +71,28 @@ export async function graphGet(recordId: string) {
   return graph.getObjectByExternalId({ objectType: DOC_TYPE, externalId: docId(recordId), connectionId: conn.connectionId });
 }
 
-/** Re-push the most recent decisions (used on connect, so existing history shows up). */
-export async function backfill(): Promise<GraphPushResult> {
-  const ids = (await kvs.get<string[]>(RECENT_KEY)) ?? [];
-  const recs = (await Promise.all(ids.map((id) => kvs.get<ProvenanceRecord>(`rec:${id}`)))).filter((r): r is ProvenanceRecord => !!r);
-  return pushRecords(recs);
+/** Push every stored decision (used on connect, so existing history shows up). Batches of 100. */
+export async function backfill(max = 500): Promise<GraphPushResult> {
+  const recs: ProvenanceRecord[] = [];
+  let cursor: string | undefined;
+  do {
+    let q = kvs.query().where('key', WhereConditions.beginsWith('rec:')).limit(100);
+    if (cursor) q = q.cursor(cursor);
+    const page = await q.getMany<ProvenanceRecord>();
+    recs.push(...page.results.map((r) => r.value));
+    cursor = page.nextCursor;
+  } while (cursor && recs.length < max);
+  const total: GraphPushResult = { at: new Date().toISOString(), ok: true, accepted: 0, rejected: [], ids: [] };
+  for (let i = 0; i < recs.length; i += 100) {
+    const r = await pushRecords(recs.slice(i, i + 100));
+    total.ok &&= r.ok;
+    total.accepted = (total.accepted ?? 0) + (r.accepted ?? 0);
+    total.rejected = [...(total.rejected ?? []), ...(r.rejected ?? [])];
+    total.ids = [...(total.ids ?? []), ...(r.ids ?? [])];
+    if (r.error || r.skipped) { total.error = r.error; total.skipped = r.skipped; break; }
+  }
+  await kvs.set(LAST_KEY, { ...total, ids: undefined, backfilled: recs.length });
+  return total;
 }
 
 interface ConnectionChange { action: 'CREATED' | 'UPDATED' | 'DELETED'; name: string; connectionId: string }

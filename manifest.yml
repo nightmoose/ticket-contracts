@@ -11,6 +11,11 @@ modules:
         You fill the structured fields of Jira Service Management support tickets, and you
         explain TicketGate's decisions about them.
 
+        HARD RULE: your first action for any fill request is read-ticket-for-fields. The ticket
+        you see in the chat context is not enough: propose-ticket-fields refuses any proposal
+        without the readId that read-ticket-for-fields returns, and the user would have to
+        confirm a refused write for nothing. So never call propose-ticket-fields first.
+
         Never edit a work item directly. The only way to write fields is the
         propose-ticket-fields action, which checks your proposal against the
         support_ticket data contract and the ticket text before anything is written.
@@ -29,9 +34,10 @@ modules:
            - If a nullable field is not in ticketText, use null. Never invent a value.
            - refund_amount_usd must be null unless category is billing.
            - summary is one plain English sentence, 5-280 characters, describing the ticket.
-        3. Call propose-ticket-fields with the work item key, the JSON object as a string in
-           "fields", and agentName "Ticket Intake". The user confirms the write in a review card;
-           that confirmation is intended.
+        3. Call propose-ticket-fields with the work item key, the readId from step 1, the JSON
+           object as a string in "fields", and agentName "Ticket Intake". The user confirms the
+           write in a review card; that confirmation is intended. If the result is NOT_CHECKED,
+           call read-ticket-for-fields now and start again from step 1.
         4. Read the result. If decision is WRITTEN, tell the user which fields were written and
            which had personal data masked. If decision is HELD, tell the user exactly what was
            held and why, quoting each entry in "held" (field and reason), and say nothing was
@@ -57,12 +63,13 @@ modules:
 
   action:
     - key: read-ticket-for-fields
-      name: Read ticket for fields
+      name: Read ticket (required before proposing fields)
       function: read-fn
       actionVerb: GET
       description: >
-        Call this first, before proposing fields. Returns the work item's text exactly as TicketGate
-        checks it (personal data masked), plus the contract's fields, allowed values and rules.
+        Required first step before propose-ticket-fields. Returns the readId that proposing needs,
+        the work item text as TicketGate checks it (PII masked), and the contract's fields, allowed
+        values and rules. Read-only.
       inputs:
         issueKey:
           title: Work item key
@@ -74,9 +81,9 @@ modules:
       function: propose-fn
       actionVerb: UPDATE
       description: >
-        The only write path for ticket fields; call read-ticket-for-fields first. Checks the
-        contract and ticket text, masks PII, then writes or holds. Returns decision (WRITTEN or
-        HELD), held fields with reasons, and tellUser to relay.
+        Write path for ticket fields. Needs readId from read-ticket-for-fields (else NOT_CHECKED).
+        Checks contract and ticket text, masks PII, then writes or holds. Returns decision
+        (WRITTEN/HELD), held fields with reasons, and tellUser to relay.
       inputs:
         issueKey:
           title: Work item key
@@ -88,6 +95,11 @@ modules:
           type: string
           required: true
           description: JSON object string with ticket_id, customer_tier, category, severity, order_ref, refund_amount_usd, language, summary. Use null for values not in the ticket.
+        readId:
+          title: Read id
+          type: string
+          required: true
+          description: The readId returned by read-ticket-for-fields for this work item in this conversation. Never make one up.
         agentName:
           title: Agent name
           type: string

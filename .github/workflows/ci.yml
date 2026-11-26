@@ -16,7 +16,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # Fails on @forge/llm (billed to the developer) and Forge Containers (no free allowance).
+      # Fails on Forge LLM imports (billed to the developer) and Forge Containers (no free allowance).
       - run: npm run check:banned
       - run: npm run validate:manifest
       - run: npm run gen:contracts && git diff --exit-code src/contracts.generated.ts

@@ -4,7 +4,7 @@
 // Also checks every manifest function handler is exported from src/index.ts.
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import yaml from 'js-yaml';
+import { parse as yamlParse } from 'yaml';
 
 const problems = [];
 const SKIP = new Set(['node_modules', '.git', 'dist', 'coverage']);
@@ -35,7 +35,7 @@ for (const key of Object.keys(lock.packages ?? {})) {
   if (key.endsWith('node_modules/@forge/llm')) problems.push(`package-lock.json: @forge/llm is installed (${key})`);
 }
 
-const manifest = yaml.load(readFileSync('manifest.yml', 'utf8'));
+const manifest = yamlParse(readFileSync('manifest.yml', 'utf8'));
 const modules = manifest.modules ?? {};
 if ('llm' in modules) problems.push('manifest.yml: modules.llm declares Forge LLM usage (billed)');
 if ('services' in manifest) problems.push('manifest.yml: top-level services (Forge Containers) are billed with no free allowance');

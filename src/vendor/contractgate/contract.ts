@@ -1,4 +1,4 @@
-import yaml from 'js-yaml';
+import { parse as yamlParse } from 'yaml';
 import { ContractCompileError } from './errors';
 import type { ValidationResult } from './types';
 // validate is imported at runtime; validator.ts uses only "import type" from this
@@ -247,7 +247,7 @@ export class Contract {
   static fromYaml(source: string): Contract {
     let raw: unknown;
     try {
-      raw = yaml.load(source);
+      raw = yamlParse(source);
     } catch (e) {
       throw new ContractCompileError(`invalid YAML: ${e}`);
     }

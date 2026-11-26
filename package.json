@@ -17,7 +17,6 @@
   "type": "commonjs",
   "devDependencies": {
     "@forge/cli": "^16.0.0",
-    "@types/js-yaml": "^4.0.9",
     "@types/node": "^26.6.11",
     "@types/react": "^19.3.3",
     "esbuild": "^0.28.2",
@@ -30,8 +29,8 @@
     "@forge/kvs": "^2.1.3",
     "@forge/react": "^12.6.0",
     "@forge/resolver": "^2.0.2",
-    "js-yaml": "^4.3.2",
-    "react": "^18.3.1"
+    "react": "^18.3.1",
+    "yaml": "^2.9.1"
   },
   "private": true,
   "engines": {

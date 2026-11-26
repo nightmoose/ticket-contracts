@@ -7,4 +7,5 @@ See `LICENSE` in this directory.
 
 Changes from upstream:
 - Relative import specifiers changed from `./x.js` to `./x` so the Forge bundler resolves the TypeScript sources.
+- `js-yaml` swapped for the `yaml` package (ISC, no dependencies): `yaml.load(source)` became `parse(source)`. js-yaml pulls in `argparse` (Python-2.0 license), which is outside this project's license allow list.
 - No other edits. The HTTP client (`client.ts`) and `llm.ts` were not copied; TicketGate makes no network calls to validate.

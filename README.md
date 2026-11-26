@@ -84,7 +84,9 @@ Deploying needs the Forge CLI logged in to an Atlassian developer account:
 
 `src/vendor/contractgate/` is the ContractGate TypeScript local validator (MIT). See its
 [NOTICE](src/vendor/contractgate/NOTICE.md). Atlassian `@forge/*` packages are installed from npm
-under Atlassian's terms and are not vendored.
+under Atlassian's terms and are not vendored. TicketGate's own direct dependency is `yaml` (ISC).
+A few packages that come in through the Atlassian packages (`argparse`, Python-2.0; `glob` and
+related, BlueOak-1.0.0) are also not vendored.
 
 ## License
 

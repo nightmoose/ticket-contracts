@@ -1,4 +1,4 @@
-import yaml from 'js-yaml';
+import { parse as yamlParse } from 'yaml';
 import { Contract, ContractCompileError } from '../vendor/contractgate';
 import type { CompiledContract } from '../vendor/contractgate';
 import type { TicketGateExtension } from './types';
@@ -12,7 +12,7 @@ export interface LoadedContract {
 
 export function loadContract(source: string): LoadedContract {
   const compiled = Contract.fromYaml(source).compile();
-  const raw = (yaml.load(source) as Record<string, unknown>)['ticketgate'] as Partial<TicketGateExtension> | undefined;
+  const raw = (yamlParse(source) as Record<string, unknown>)['ticketgate'] as Partial<TicketGateExtension> | undefined;
   const ext: TicketGateExtension = {
     nullable: raw?.nullable ?? [],
     grounded: raw?.grounded ?? [],

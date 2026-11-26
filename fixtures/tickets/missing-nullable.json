@@ -1,0 +1,18 @@
+{
+  "name": "Agent omits order_ref entirely instead of null, and severity out of range: held",
+  "ticket": {
+    "key": "SUP-47",
+    "summary": "Feature idea",
+    "description": "Ticket T-1200. Pro user. Would love dark mode for the dashboard."
+  },
+  "proposal": {
+    "ticket_id": "T-1200",
+    "customer_tier": "pro",
+    "category": "feature_request",
+    "severity": 7,
+    "refund_amount_usd": null,
+    "language": "en",
+    "summary": "Dark mode request for the dashboard."
+  },
+  "expect": { "decision": "held", "violations": [{ "check": "nullable", "field": "order_ref" }, { "check": "contract", "field": "severity" }] }
+}

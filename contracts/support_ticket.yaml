@@ -1,0 +1,60 @@
+# TicketGate contract for one support ticket's structured fields.
+# The `version`/`name`/`ontology` blocks are ContractGate contract format and are checked by the
+# vendored ContractGate validator. The `ticketgate` block adds checks that need the ticket text:
+# nullable fields, cross-field rules, grounding, and PII handling.
+# Field set follows the SchemaSmith support_ticket contract (github.com/nightmoose/schemasmith).
+version: "1.0.0"
+name: support_ticket
+description: Structured fields an agent may write onto one support ticket.
+compliance_mode: true
+ontology:
+  entities:
+    - name: ticket_id
+      type: string
+      required: true
+      pattern: "^T-[A-Za-z0-9]+$"
+    - name: customer_tier
+      type: string
+      required: true
+      enum: [free, pro, enterprise]
+    - name: category
+      type: string
+      required: true
+      enum: [billing, bug, access, feature_request]
+    - name: severity
+      type: integer
+      required: true
+      min: 1
+      max: 4
+    - name: order_ref
+      type: string
+      required: false
+      pattern: "^ORD-\\d{6}$"
+    - name: refund_amount_usd
+      type: float
+      required: false
+      min: 0
+    - name: language
+      type: string
+      required: true
+      enum: [en, es, fr, de, pt, it, ja, hi]
+    - name: summary
+      type: string
+      required: true
+      min_length: 5
+      max_length: 280
+      transform:
+        kind: mask
+ticketgate:
+  # Must be present in the proposal, but null is allowed.
+  nullable: [order_ref, refund_amount_usd]
+  # Every non-null value of these fields must appear in the ticket text.
+  grounded: [ticket_id, order_ref, refund_amount_usd]
+  rules:
+    - field: refund_amount_usd
+      null_unless: { category: billing }
+      message: refund_amount_usd must be null unless category is billing
+  pii:
+    # Free-text fields are scanned and masked before anything is written.
+    scan_fields: [summary]
+    detectors: [email, phone, card, iban]

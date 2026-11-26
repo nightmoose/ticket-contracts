@@ -1,0 +1,20 @@
+{
+  "name": "Off-enum tier and an undeclared field the agent tried to set: held by the contract",
+  "ticket": {
+    "key": "SUP-46",
+    "summary": "Can't log in",
+    "description": "Ticket T-3302. Gold customer here, SSO login loops forever. Please assign to the identity team."
+  },
+  "proposal": {
+    "ticket_id": "T-3302",
+    "customer_tier": "gold",
+    "category": "access",
+    "severity": 2,
+    "order_ref": null,
+    "refund_amount_usd": null,
+    "language": "en",
+    "summary": "SSO login loops.",
+    "assignee": "identity-team"
+  },
+  "expect": { "decision": "held", "violations": [{ "check": "contract", "field": "customer_tier" }, { "check": "contract", "field": "assignee" }] }
+}

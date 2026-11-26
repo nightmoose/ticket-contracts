@@ -1,0 +1,19 @@
+{
+  "name": "Spanish refund ticket, agent invents an order reference: held by grounding",
+  "ticket": {
+    "key": "SUP-43",
+    "summary": "Reembolso por cobro duplicado",
+    "description": "Hola, soy cliente pro. Ticket T-8842. Me cobraron dos veces este mes, por favor devuélvanme 49,90 USD. No tengo el número de pedido a mano."
+  },
+  "proposal": {
+    "ticket_id": "T-8842",
+    "customer_tier": "pro",
+    "category": "billing",
+    "severity": 2,
+    "order_ref": "ORD-123456",
+    "refund_amount_usd": 49.9,
+    "language": "es",
+    "summary": "Duplicate charge this month; customer asks for 49.90 USD back."
+  },
+  "expect": { "decision": "held", "violations": [{ "check": "grounding", "field": "order_ref" }] }
+}

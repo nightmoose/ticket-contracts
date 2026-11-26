@@ -142,7 +142,14 @@ modules:
       events:
         - avi:jira:created:issue
 
+  # Development-only smoke test (needs the TG_SELFTEST_KEY variable). Remove before production.
+  webtrigger:
+    - key: ticketgate-selftest
+      function: selftest-fn
+
   function:
+    - key: selftest-fn
+      handler: index.selftest
     - key: propose-fn
       handler: index.proposeTicketFields
     - key: check-fn

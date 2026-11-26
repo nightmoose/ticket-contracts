@@ -1,5 +1,5 @@
 # TicketGate Forge manifest.
-# app.id is a placeholder until `forge register` runs (needs an Atlassian developer account).
+# app.id is the registered TicketGate app (developer space NightMoose).
 # No Forge LLM module, no containers/services: see scripts/check-banned.mjs.
 modules:
   rovo:agent:
@@ -7,7 +7,7 @@ modules:
       name: Ticket Intake
       description: Reads a support ticket and proposes its structured fields through TicketGate's contract, grounding and PII checks.
       icon: resource:static;icon.svg
-      prompt: >
+      prompt: |
         You fill the structured fields of Jira Service Management support tickets.
 
         Never edit a work item directly. The only way to write fields is the
@@ -171,7 +171,7 @@ permissions:
     - storage:app
 
 app:
-  id: ari:cloud:ecosystem::app/00000000-0000-0000-0000-000000000000
+  id: ari:cloud:ecosystem::app/0e5d23f1-5def-4716-bd77-8e05356d98d6
   runtime:
     name: nodejs24.x
     memoryMB: 256

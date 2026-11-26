@@ -2,3 +2,4 @@
 export { proposeTicketFields, checkTicketFields, explainTicketHold, listHeldProposals } from './forge/actions';
 export { handler as resolver } from './forge/resolvers';
 export { onIssueCreated } from './forge/triggers';
+export { selftest } from './forge/selftest';

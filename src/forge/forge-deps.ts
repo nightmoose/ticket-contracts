@@ -2,6 +2,7 @@ import api, { route } from '@forge/api';
 import { randomUUID } from 'node:crypto';
 import type { Deps, IssueSnapshot, ProvenanceRecord } from './service';
 import { kvsStore } from './kvs-store';
+import { onDecision } from './graph-sync';
 
 export const FIELDS_PROPERTY = 'ticketgate-fields';
 
@@ -47,4 +48,5 @@ export const forgeDeps: Deps = {
   store: kvsStore,
   now: () => new Date().toISOString(),
   newId: () => randomUUID(),
+  onRecord: onDecision,
 };

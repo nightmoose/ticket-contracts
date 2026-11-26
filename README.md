@@ -35,6 +35,7 @@ Work in progress for Codegeist 2026.
 | Teamwork Graph connector (write): a provenance document per decision | connected on the dev site; all stored decisions backfilled and read back from the graph; new decisions pushed live (see [docs/teamwork-graph.md](docs/teamwork-graph.md)) |
 | Rovo agent | invokes the actions in Rovo Chat and relays held/written reasons; read-before-propose is enforced with a readId (see [docs/rovo-agent.md](docs/rovo-agent.md)) |
 | External MCP client | verified with `mcp-remote-client` (MIT): all five tools listed; read then a held propose on SUP-6 (see [docs/mcp.md](docs/mcp.md)) |
+| Marketplace and Codegeist drafts | [docs/marketplace-listing.md](docs/marketplace-listing.md) and [docs/submission-draft.md](docs/submission-draft.md) (not submitted) |
 
 ## Forge modules
 
@@ -74,9 +75,9 @@ Deploying needs the Forge CLI logged in to an Atlassian developer account:
 Demo data: `JIRA_SITE=... JIRA_EMAIL=... JIRA_TOKEN=... node scripts/seed-demo.mjs SUP` creates the
 fixture tickets in a service project.
 
-The `ticketgate-selftest` web trigger is a development-only smoke test. It needs the encrypted
-`TG_SELFTEST_KEY` Forge variable and refuses every request without it. It will be removed before
-the production deploy.
+The development-only `ticketgate-selftest` web trigger has been removed so the app can qualify
+for "Runs on Atlassian." How to verify on the dev site is in
+[docs/dev-verification.md](docs/dev-verification.md).
 
 ## Contracts
 

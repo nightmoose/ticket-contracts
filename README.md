@@ -34,6 +34,7 @@ Work in progress for Codegeist 2026.
 | Teamwork Graph read (panel: other tickets from this reporter) | deployed and seen in a browser |
 | Teamwork Graph connector (write): a provenance document per decision | connected on the dev site; all stored decisions backfilled and read back from the graph; new decisions pushed live (see [docs/teamwork-graph.md](docs/teamwork-graph.md)) |
 | Rovo agent | invokes the actions in Rovo Chat and relays held/written reasons; read-before-propose is enforced with a readId (see [docs/rovo-agent.md](docs/rovo-agent.md)) |
+| External MCP client | verified with `mcp-remote-client` (MIT): all five tools listed; read then a held propose on SUP-6 (see [docs/mcp.md](docs/mcp.md)) |
 
 ## Forge modules
 

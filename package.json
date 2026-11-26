@@ -4,7 +4,7 @@
   "description": "Contract, grounding and PII checks on every field an AI agent writes to a Jira ticket",
   "scripts": {
     "test": "tsx --test tests/*.test.ts",
-    "typecheck": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "gen:contracts": "node scripts/gen-contracts.mjs",
     "check:banned": "node scripts/check-banned.mjs",
     "lint": "forge lint",

@@ -1,4 +1,7 @@
-// Development-only diagnostic web trigger. Exercises the real write path (Jira REST + KVS) without
+// Development-only diagnostic handler, kept as a reference.
+// NOT IN THE MANIFEST. It is not deployed. Do not add a webtrigger module for it:
+// that module made the app ineligible for "Runs on Atlassian". See docs/dev-verification.md.
+// Development-only diagnostic web trigger (retired). Exercises the real write path (Jira REST + KVS) without
 // Rovo, so a deploy can be smoke-tested from a script. Requires the TG_SELFTEST_KEY Forge variable;
 // with no key set it refuses every request. Not part of the production feature set.
 import { explainHold, issueState, proposeFields, scanIssue } from './service';

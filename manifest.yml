@@ -200,14 +200,7 @@ modules:
         onConnectionChange:
           function: connection-fn
 
-  # Development-only smoke test (needs the TG_SELFTEST_KEY variable). Remove before production.
-  webtrigger:
-    - key: ticketgate-selftest
-      function: selftest-fn
-
   function:
-    - key: selftest-fn
-      handler: index.selftest
     - key: read-fn
       handler: index.readTicketForFields
     - key: connection-fn

@@ -40,8 +40,7 @@ Disconnecting (DELETED) clears the stored connection. Atlassian deletes the inge
 
 ### Checking it (dev site only)
 
-The key-gated dev self-test has `op=graph-status` (connection and last push), `op=graph-get`
-(reads a decision document back by id), `op=graph-list` (every decision for an issue, and whether
-its document is in the graph), `op=graph-backfill` and `op=graph-probe`. Before an
-admin connects, `graph-probe` returns `400 Invalid connectionId format` from the graph connector
-API. That proves the API and scopes are reachable.
+After a connection exists, a new decision (for example a held proposal through the
+MCP tools or the Ticket Intake agent) is pushed as it happens. `docs/dev-verification.md`
+describes how to confirm a document reads back. The old key-gated self-test web trigger
+was removed so the app can qualify for "Runs on Atlassian." 

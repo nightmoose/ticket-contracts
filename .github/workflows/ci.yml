@@ -1,0 +1,25 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Fails on @forge/llm (billed to the developer) and Forge Containers (no free allowance).
+      - run: npm run check:banned
+      - run: npm run validate:manifest
+      - run: npm run gen:contracts && git diff --exit-code src/contracts.generated.ts
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build:check

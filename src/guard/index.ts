@@ -66,9 +66,11 @@ export function guardProposal(
     if (val === null || val === undefined) continue;
     const g = ground(ticketText, f, val);
     if (g.ok) {
-      // Re-cut the snippet from masked text so evidence never carries raw PII.
-      const m = maskText(g.evidence.snippet, f, ext.pii.detectors);
-      evidence.push({ ...g.evidence, snippet: m.text });
+      // Cut the snippet from the fully masked ticket text so evidence never carries raw or
+      // partial PII (a window cut from raw text could slice a card number in half).
+      const gm = ground(maskedTicket.text, f, val);
+      const snippet = gm.ok ? gm.evidence.snippet : '[value is inside masked personal data]';
+      evidence.push({ ...g.evidence, snippet });
     } else {
       violations.push({ check: 'grounding', field: f, kind: 'not_in_source', message: `${f} ${JSON.stringify(val)} does not appear in the ticket text` });
     }

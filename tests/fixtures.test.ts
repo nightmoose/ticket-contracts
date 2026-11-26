@@ -32,3 +32,15 @@ for (const file of readdirSync(dir).filter((f) => f.endsWith('.json')).sort()) {
     }
   });
 }
+
+test('evidence snippets never contain partial card or phone digits', () => {
+  const text = 'Refund 25.00 USD please. Card 4242 4242 4242 4242 and phone +34 612 345 678, ticket T-1.';
+  const r = guardProposal(contract, text, {
+    ticket_id: 'T-1', customer_tier: 'pro', category: 'billing', severity: 2,
+    order_ref: null, refund_amount_usd: 25, language: 'en', summary: 'Refund request.',
+  });
+  assert.equal(r.decision, 'pass');
+  const snippets = r.evidence.map((e) => e.snippet).join(' | ');
+  assert.doesNotMatch(snippets, /4242 4242|612 345|345 678/);
+  assert.match(snippets, /\[card ••/);
+});

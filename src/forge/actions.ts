@@ -1,5 +1,5 @@
 // Rovo action handlers. The same actions back the Rovo agent and the rovo:mcp tools.
-import { explainHold, listHeld, proposeFields, validateOnly } from './service';
+import { agentReply, checkRead, explainHold, listHeld, proposeFields, readFirstReply, readTicket, validateOnly } from './service';
 import { forgeDeps } from './forge-deps';
 
 interface ActionPayload {
@@ -7,6 +7,7 @@ interface ActionPayload {
   fields?: string;
   agentName?: string;
   recordId?: string;
+  readId?: string;
   context?: { jira?: { issueKey?: string }; [k: string]: unknown };
   [k: string]: unknown;
 }
@@ -30,15 +31,37 @@ async function safe<T>(fn: () => Promise<T>): Promise<T | string> {
   }
 }
 
+export const readTicketForFields = (p: ActionPayload) =>
+  safe(async () => {
+    const r = await readTicket(forgeDeps, { issueKey: issueKeyOf(p) });
+    console.log(`ticketgate read ${r.issueKey}`);
+    return r;
+  });
+
+// Proposals must follow a read-ticket-for-fields call for the same work item (enforced, not just
+// prompted): an agent that skips the read gets NOT_CHECKED and nothing is written or recorded.
 export const proposeTicketFields = (p: ActionPayload) =>
-  safe(async () => (await proposeFields(forgeDeps, { issueKey: issueKeyOf(p), fields: p.fields, agent: p.agentName, source: sourceOf(p) })).message);
+  safe(async () => {
+    const issueKey = issueKeyOf(p);
+    const notRead = await checkRead(forgeDeps, issueKey, p.readId);
+    if (notRead) {
+      console.log(`ticketgate propose refused ${issueKey}: ${notRead}`);
+      return readFirstReply(issueKey, notRead);
+    }
+    return agentReply((await proposeFields(forgeDeps, { issueKey, fields: p.fields, agent: p.agentName, source: sourceOf(p) })).record);
+  });
 
 export const checkTicketFields = (p: ActionPayload) =>
   safe(async () => {
     const r = await validateOnly(forgeDeps, { issueKey: issueKeyOf(p), fields: p.fields });
-    return r.decision === 'pass'
-      ? 'Would PASS. Nothing written; call propose-ticket-fields to write.'
-      : `Would be HELD:\n${r.violations.map((v) => `- ${v.field}: ${v.message}`).join('\n')}`;
+    return {
+      decision: r.decision === 'pass' ? 'WOULD_PASS' : 'WOULD_BE_HELD',
+      written: [],
+      held: r.violations.map((v) => ({ field: v.field, check: v.check, reason: v.message })),
+      tellUser: r.decision === 'pass'
+        ? 'Dry run: this proposal would pass. Nothing was written.'
+        : `Dry run: this proposal would be held. ${r.violations.map((v) => `${v.field}: ${v.message}`).join('; ')}. Nothing was written.`,
+    };
   });
 
 export const explainTicketHold = (p: ActionPayload) =>

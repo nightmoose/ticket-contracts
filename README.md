@@ -31,21 +31,24 @@ Work in progress for Codegeist 2026.
 | Guard core (`src/guard`): contract, grounding and PII checks | done, unit-tested |
 | Write path, held queue, provenance (`src/forge/service.ts`) | done, tested with in-memory fakes |
 | Forge wiring: Rovo agent and actions, `rovo:mcp`, issue panel, admin page, issue-created scan | deployed to a development site; write path and scan verified against real Jira + KVS |
-| Teamwork Graph read (panel: other tickets from this reporter) | deployed, not yet viewed in a browser |
-| Teamwork Graph connector (write) | not started |
+| Teamwork Graph read (panel: other tickets from this reporter) | deployed and seen in a browser |
+| Teamwork Graph connector (write): a provenance document per decision | connected on the dev site; all stored decisions backfilled and read back from the graph; new decisions pushed live (see [docs/teamwork-graph.md](docs/teamwork-graph.md)) |
+| Rovo agent | invokes the actions in Rovo Chat and relays held/written reasons; read-before-propose is enforced with a readId (see [docs/rovo-agent.md](docs/rovo-agent.md)) |
 
 ## Forge modules
 
 | Module | Key | Purpose |
 |---|---|---|
 | `rovo:agent` | `ticket-intake` | Reads a ticket and proposes its fields, only through the actions below |
-| `action` | `propose-ticket-fields` | The write path: check, then write or hold |
+| `action` | `read-ticket-for-fields` | Read first: the ticket text as TicketGate checks it (PII masked) plus the contract's field rules |
+| `action` | `propose-ticket-fields` | The write path: check, then write or hold; returns WRITTEN/HELD with reasons |
 | `action` | `check-ticket-fields` | Dry run |
 | `action` | `explain-ticket-hold` | Why a proposal was held, with evidence |
 | `action` | `list-held-proposals` | Review queue |
-| `rovo:mcp` | `ticketgate-mcp` | The same four actions as MCP tools (see [`skill.md`](skill.md)) |
+| `rovo:mcp` | `ticketgate-mcp` | The same five actions as MCP tools (see [`skill.md`](skill.md)) |
 | `jira:issuePanel` | `ticketgate-panel` | Latest decision, held reasons, evidence, release or reject |
 | `jira:adminPage` | `ticketgate-admin` | Setup check, contract editor, held queue |
+| `graph:connector` | `ticketgate-provenance` | Writes each decision to Teamwork Graph as a document linked to its work item (no ticket values) |
 | `trigger` | `ticketgate-scan` | On issue created, records which kinds of PII a ticket contains |
 
 Accepted fields are stored in the `ticketgate-fields` issue property, so a site needs no

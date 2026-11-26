@@ -23,7 +23,7 @@ MCP, Teamwork Graph
 Give business and support teams the context to act on a ticket without letting an agent
 write invented IDs, amounts, or unmasked personal data.
 
-**Repo (optional, still private until you say otherwise):**
+**Repo:**
 https://github.com/nightmoose/ticket-contracts
 
 **Demo video (YouTube, public, under 5 minutes):**
@@ -31,8 +31,9 @@ https://github.com/nightmoose/ticket-contracts
 
 **Installation link for judges** (from
 [Start sharing your app](https://developer.atlassian.com/platform/forge/distribute-your-apps/#start-sharing-your-app);
-create this before a Marketplace listing goes up, or keep an unlicensed copy):
-[INSTALL_LINK]
+use the unlicensed **Ticket Contracts (judges)** copy, app id
+`3a5a6737-9fce-4787-afed-83907eed9fb9`). See the install link in the submission form.
+Do not paste the signed URL into this repo.
 
 **Marketplace listing or review-ticket link** (only if the listing has been submitted):
 [MARKETPLACE_OR_REVIEW_TICKET_URL]

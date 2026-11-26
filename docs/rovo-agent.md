@@ -3,7 +3,7 @@
 ## Read before propose
 
 The agent's first step is always `read-ticket-for-fields`, a GET action, so it has no confirm card.
-It returns the ticket text exactly as TicketGate checks it, with PII masked, plus the contract's
+It returns the ticket text exactly as Ticket Contracts checks it, with PII masked, plus the contract's
 fields, allowed values and grounding rules. The prompt forbids values from memory, other tickets
 or examples. It also says `ticket_id` is the customer's reference in the text (e.g. `T-6060`),
 not the Jira key.
@@ -28,7 +28,7 @@ The read action's name says it is required, and the prompt opens with the rule.
 - `written`: the fields written.
 - `piiMasked`: the fields where personal data was masked.
 - `held`: a list of `{field, check, reason}`.
-- `nextStep`, plus `tellUser`, a sentence the agent can say as-is ("TicketGate held this
+- `nextStep`, plus `tellUser`, a sentence the agent can say as-is ("Ticket Contracts held this
   proposal, so nothing was written to SUP-5. refund_amount_usd: refund_amount_usd 900 does not
   appear in the ticket text.").
 
@@ -42,7 +42,7 @@ intended, for two reasons:
 
 - Marketplace security requirement 14 says `actionVerb` must truthfully say whether an action
   changes data.
-- The card is a second, human check on top of TicketGate's own.
+- The card is a second, human check on top of Ticket Contracts' own.
 
 It also means automation-triggered agents won't call the write action.
 
@@ -57,6 +57,6 @@ In one early Rovo Chat run on SUP-5, before the read-first action existed, the a
 - `order_ref: ORD-992834` (the ticket says ORD-777001)
 - `refund_amount_usd: 45.0` (not in the ticket)
 
-None of these appear in the ticket. This is exactly the failure TicketGate exists for. Confirming
+None of these appear in the ticket. This is exactly the failure Ticket Contracts exists for. Confirming
 that proposal on camera shows it being HELD with "does not appear in the ticket text", and nothing
 is written. Keep a screenshot of that review card for the video.

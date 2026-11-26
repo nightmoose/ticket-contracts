@@ -1,6 +1,6 @@
 // Create the fixture tickets as work items in a Jira Service Management project.
 // Usage: JIRA_SITE=https://<site>.atlassian.net JIRA_EMAIL=... JIRA_TOKEN=... node scripts/seed-demo.mjs [PROJECT_KEY]
-// Idempotent: tickets already present (same summary + label ticketgate-demo) are skipped.
+// Idempotent: tickets already present (same summary + label ticket-contracts-demo, or the older ticketgate-demo) are skipped.
 import { readdirSync, readFileSync } from 'node:fs';
 
 const site = process.env.JIRA_SITE;
@@ -25,7 +25,7 @@ async function jira(method, path, body) {
 const types = await jira('GET', `/rest/api/3/issue/createmeta/${project}/issuetypes`);
 const type = types.issueTypes.find((t) => t.name === 'Support') ?? types.issueTypes.find((t) => !t.subtask);
 const existing = await jira('POST', '/rest/api/3/search/jql', {
-  jql: `project = ${project} AND labels = ticketgate-demo`, fields: ['summary', 'description'], maxResults: 100,
+  jql: `project = ${project} AND labels in (ticket-contracts-demo, ticketgate-demo)`, fields: ['summary', 'description'], maxResults: 100,
 });
 const have = new Map(existing.issues.map((i) => [i.fields.summary + '\u0000' + JSON.stringify(i.fields.description), i.key]));
 
@@ -38,7 +38,7 @@ for (const f of readdirSync(dir).filter((x) => x.endsWith('.json')).sort()) {
   let key = seen.get(id) ?? have.get(id);
   if (!key) {
     const created = await jira('POST', '/rest/api/3/issue', {
-      fields: { project: { key: project }, issuetype: { id: type.id }, summary: fx.ticket.summary, description, labels: ['ticketgate-demo'] },
+      fields: { project: { key: project }, issuetype: { id: type.id }, summary: fx.ticket.summary, description, labels: ['ticket-contracts-demo'] },
     });
     key = created.key;
     console.log(`created ${key}  ${f}`);

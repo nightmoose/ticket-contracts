@@ -1,16 +1,16 @@
 ---
-name: ticketgate
-description: Use when an AI agent needs to set structured fields on a Jira Service Management ticket through the TicketGate MCP tools.
+name: ticket-contracts
+description: Use when an AI agent needs to set structured fields on a Jira Service Management ticket through the Ticket Contracts MCP tools.
 ---
 
-# Writing ticket fields through TicketGate
+# Writing ticket fields through Ticket Contracts
 
-TicketGate is the write path for a support ticket's structured fields. It checks every proposal
+Ticket Contracts is the write path for a support ticket's structured fields. It checks every proposal
 against a data contract and the ticket text, masks personal data, and either writes the fields or
 holds them for a person to review.
 
 MCP endpoint: `https://mcp.atlassian.com/forge/<app-id>` (a site admin must turn on external tools
-for TicketGate in Atlassian Administration).
+for Ticket Contracts in Atlassian Administration).
 
 ## Tools
 

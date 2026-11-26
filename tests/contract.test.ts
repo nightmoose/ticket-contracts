@@ -10,13 +10,13 @@ test('generated contracts match contracts/*.yaml', () => {
   assert.equal(CONTRACTS['support_ticket'], yaml, 'run npm run gen:contracts');
 });
 
-test('support_ticket contract loads with its TicketGate block', () => {
+test('support_ticket contract loads with its Ticket Contracts block', () => {
   const c = loadContract(CONTRACTS['support_ticket']);
   assert.equal(c.name, 'support_ticket');
   assert.deepEqual(c.ext.grounded, ['ticket_id', 'order_ref', 'refund_amount_usd']);
 });
 
-test('ticketgate block naming an undeclared field is rejected', () => {
+test('ticket_contracts block naming an undeclared field is rejected', () => {
   const bad = CONTRACTS['support_ticket'].replace('grounded: [ticket_id,', 'grounded: [nope, ticket_id,');
   assert.throws(() => loadContract(bad), /undeclared field 'nope'/);
 });

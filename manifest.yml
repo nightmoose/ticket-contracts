@@ -1,15 +1,15 @@
-# TicketGate Forge manifest.
-# app.id is the registered TicketGate app (developer space NightMoose).
+# Ticket Contracts Forge manifest.
+# app.id is the registered Ticket Contracts app (developer space NightMoose).
 # No Forge LLM module, no containers/services: see scripts/check-banned.mjs.
 modules:
   rovo:agent:
     - key: ticket-intake
       name: Ticket Intake
-      description: Reads a support ticket and proposes its structured fields through TicketGate's contract, grounding and PII checks.
+      description: Reads a support ticket and proposes its structured fields through Ticket Contracts' contract, grounding and PII checks.
       icon: resource:static;icon.svg
       prompt: |
         You fill the structured fields of Jira Service Management support tickets, and you
-        explain TicketGate's decisions about them.
+        explain Ticket Contracts' decisions about them.
 
         HARD RULE: your first action for any fill request is read-ticket-for-fields. The ticket
         you see in the chat context is not enough: propose-ticket-fields refuses any proposal
@@ -68,7 +68,7 @@ modules:
       actionVerb: GET
       description: >
         Required first step before propose-ticket-fields. Returns the readId that proposing needs,
-        the work item text as TicketGate checks it (PII masked), and the contract's fields, allowed
+        the work item text as Ticket Contracts checks it (PII masked), and the contract's fields, allowed
         values and rules. Read-only.
       inputs:
         issueKey:
@@ -125,7 +125,7 @@ modules:
       name: Explain ticket hold
       function: explain-fn
       actionVerb: GET
-      description: Explains the latest held TicketGate decision for a work item, or a specific record, with the reasons and the evidence found in the ticket.
+      description: Explains the latest held Ticket Contracts decision for a work item, or a specific record, with the reasons and the evidence found in the ticket.
       inputs:
         issueKey:
           title: Work item key
@@ -136,12 +136,12 @@ modules:
           title: Record id
           type: string
           required: false
-          description: A TicketGate record id from an earlier result.
+          description: A Ticket Contracts record id from an earlier result.
     - key: list-held-proposals
       name: List held proposals
       function: list-fn
       actionVerb: GET
-      description: Lists agent proposals that TicketGate is holding for human review, optionally for one work item.
+      description: Lists agent proposals that Ticket Contracts is holding for human review, optionally for one work item.
       inputs:
         issueKey:
           title: Work item key
@@ -151,7 +151,7 @@ modules:
 
   rovo:mcp:
     - key: ticketgate-mcp
-      name: TicketGate
+      name: Ticket Contracts
       tools:
         - read-ticket-for-fields
         - propose-ticket-fields
@@ -165,7 +165,7 @@ modules:
       resolver:
         function: resolver-fn
       render: native
-      title: TicketGate
+      title: Ticket Contracts
       icon: resource:static;icon.svg
 
   jira:adminPage:
@@ -174,7 +174,7 @@ modules:
       resolver:
         function: resolver-fn
       render: native
-      title: TicketGate
+      title: Ticket Contracts
 
   trigger:
     - key: ticketgate-scan
@@ -186,7 +186,7 @@ modules:
   # Holds no ticket values or PII (see src/forge/graph-doc.ts). Admin connects it once.
   graph:connector:
     - key: ticketgate-provenance
-      name: TicketGate
+      name: Ticket Contracts
       icons:
         light: resource:static;icon.svg
         dark: resource:static;icon.svg

@@ -72,8 +72,8 @@ function App() {
   const onResolve = (recordId: string, action: 'release' | 'reject') =>
     call('resolveHeld', { recordId, action }).then(load).catch((e) => setError(String(e)));
 
-  if (error) return <SectionMessage appearance="error" title="TicketGate">{<Text>{error}</Text>}</SectionMessage>;
-  if (!state) return <Spinner label="Loading TicketGate" />;
+  if (error) return <SectionMessage appearance="error" title="Ticket Contracts">{<Text>{error}</Text>}</SectionMessage>;
+  if (!state) return <Spinner label="Loading Ticket Contracts" />;
   const [latest, ...older] = state.records;
   return (
     <Stack space="space.200">

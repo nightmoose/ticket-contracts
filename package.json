@@ -1,5 +1,5 @@
 {
-  "name": "ticketgate",
+  "name": "ticket-contracts",
   "version": "0.1.0",
   "description": "Contract, grounding and PII checks on every field an AI agent writes to a Jira ticket",
   "scripts": {

@@ -1,6 +1,6 @@
 # Teamwork Graph
 
-TicketGate uses Teamwork Graph both ways.
+Ticket Contracts uses Teamwork Graph both ways.
 
 ## Read: other tickets from this reporter
 
@@ -10,7 +10,7 @@ so it can't be called from a script with an API token.
 
 ## Write: decision provenance (`graph:connector`)
 
-Every TicketGate decision (written, held, released, rejected) becomes an `atlassian:document`
+Every Ticket Contracts decision (written, held, released, rejected) becomes an `atlassian:document`
 linked to its work item through an `issueIdOrKeys` association. That makes "what did agents
 propose for SUP-5 and what happened" visible to Rovo Search, Rovo Chat and agents.
 
@@ -21,18 +21,18 @@ app's own storage on the site, as the connector terms require (`src/forge/graph-
 `tests/agent-graph.test.ts`).
 
 Visibility is `ATLASSIAN_WORKSPACE`, and the declared sync is `upsert` and incremental. The
-document id is `ticketgate-decision-<recordId>`, so a release or reject updates the same document.
+document id is `ticketgate-decision-<recordId>`, so a release or reject updates the same document. The sequence number is the update time with a wording revision (`DOC_REVISION`) in the low two digits, so a re-push after a wording change replaces existing documents.
 
 **Failure is never fatal.** If no connection exists or ingestion fails, the decision still goes
 through as normal. The outcome of the last push is kept for diagnosis.
 
 ### Admin step (once per site)
 
-1. Atlassian Administration → **Apps** → **Sites** → the site → **Connected apps** → **TicketGate**
+1. Atlassian Administration → **Apps** → **Sites** → the site → **Connected apps** → **Ticket Contracts**
    → **Connections** tab.
-2. Next to the **TicketGate** connector, click **Connect**, give it a nickname, accept, and
+2. Next to the **Ticket Contracts** connector, click **Connect**, give it a nickname, accept, and
    save. No form fields are needed.
-3. Atlassian calls `onConnectionChange` (CREATED). TicketGate stores the connection id and pushes
+3. Atlassian calls `onConnectionChange` (CREATED). Ticket Contracts stores the connection id and pushes
    every stored decision (up to 500, in batches of 100) to the graph. From then on, every new decision is pushed as it
    happens.
 

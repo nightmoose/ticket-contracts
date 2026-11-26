@@ -1,6 +1,6 @@
-# TicketGate contract for one support ticket's structured fields.
+# Ticket Contracts contract for one support ticket's structured fields.
 # The `version`/`name`/`ontology` blocks are ContractGate contract format and are checked by the
-# vendored ContractGate validator. The `ticketgate` block adds checks that need the ticket text:
+# vendored ContractGate validator. The `ticket_contracts` block adds checks that need the ticket text:
 # nullable fields, cross-field rules, grounding, and PII handling.
 # Field set follows the SchemaSmith support_ticket contract (github.com/nightmoose/schemasmith).
 version: "1.0.0"
@@ -45,7 +45,7 @@ ontology:
       max_length: 280
       transform:
         kind: mask
-ticketgate:
+ticket_contracts:
   # Must be present in the proposal, but null is allowed.
   nullable: [order_ref, refund_amount_usd]
   # Every non-null value of these fields must appear in the ticket text.

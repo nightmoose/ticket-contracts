@@ -12,7 +12,7 @@ interface AdminState {
 const SETUP_STEPS = [
   'Rovo: open Rovo Chat and pick the "Ticket Intake" agent. If it is missing, check that Rovo is enabled for this site.',
   'Automation (optional): rule "Work item created" → "Use Rovo agent" → Ticket Intake, so new tickets are filled automatically.',
-  'MCP (optional): Atlassian Administration → Apps → this site → TicketGate → Tools, turn on external exposure.',
+  'MCP (optional): Atlassian Administration → Apps → this site → Ticket Contracts → Tools, turn on external exposure.',
 ];
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
   if (!state) return <Spinner label="Loading" />;
   return (
     <Stack space="space.300">
-      <Heading size="large">TicketGate</Heading>
+      <Heading size="large">Ticket Contracts</Heading>
       <Stack space="space.100">
         <Heading size="medium">Setup check</Heading>
         {SETUP_STEPS.map((s, i) => <Text key={i}>{i + 1}. {s}</Text>)}

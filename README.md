@@ -1,8 +1,8 @@
-# TicketGate
+# Ticket Contracts
 
 **Agents read context. Who checks what they write?**
 
-TicketGate is a Forge app for Jira Service Management. Every structured field an AI agent proposes
+Ticket Contracts is a Forge app for Jira Service Management. Every structured field an AI agent proposes
 for a support ticket goes through one write path. That covers a Rovo agent, a custom Rovo Studio
 agent, or an outside client over MCP. Each proposal gets three deterministic checks before anything
 lands on the ticket:
@@ -12,7 +12,7 @@ lands on the ticket:
 2. **Grounding check:** every id, order reference and amount must appear in the ticket text. Both
    `1,249.50` and `1.249,50` count.
 3. **PII masking:** emails, phone numbers, card numbers (Luhn-checked) and IBANs are masked in
-   free-text fields before they are written, and are never kept raw in TicketGate's records.
+   free-text fields before they are written, and are never kept raw in Ticket Contracts' records.
 
 Proposals that pass are written to the work item. The rest are **held** on the issue panel with the
 exact reason and the ticket text that was checked, and a person can release or reject them. Every
@@ -40,7 +40,7 @@ Work in progress for Codegeist 2026.
 | Module | Key | Purpose |
 |---|---|---|
 | `rovo:agent` | `ticket-intake` | Reads a ticket and proposes its fields, only through the actions below |
-| `action` | `read-ticket-for-fields` | Read first: the ticket text as TicketGate checks it (PII masked) plus the contract's field rules |
+| `action` | `read-ticket-for-fields` | Read first: the ticket text as Ticket Contracts checks it (PII masked) plus the contract's field rules |
 | `action` | `propose-ticket-fields` | The write path: check, then write or hold; returns WRITTEN/HELD with reasons |
 | `action` | `check-ticket-fields` | Dry run |
 | `action` | `explain-ticket-hold` | Why a proposal was held, with evidence |
@@ -51,7 +51,7 @@ Work in progress for Codegeist 2026.
 | `graph:connector` | `ticketgate-provenance` | Writes each decision to Teamwork Graph as a document linked to its work item (no ticket values) |
 | `trigger` | `ticketgate-scan` | On issue created, records which kinds of PII a ticket contains |
 
-Accepted fields are stored in the `ticketgate-fields` issue property, so a site needs no
+Accepted fields are stored in the `ticketgate-fields` issue property (module keys, the issue property and Teamwork Graph document ids keep the `ticketgate` prefix from before the rename, so existing installs keep their data), so a site needs no
 custom-field setup.
 
 **Cost guard:** the app never calls Forge LLM APIs and uses no Forge Containers.
@@ -79,7 +79,7 @@ the production deploy.
 
 ## Contracts
 
-`contracts/support_ticket.yaml` uses ContractGate's contract format plus a `ticketgate` block
+`contracts/support_ticket.yaml` uses ContractGate's contract format plus a `ticket_contracts` block (the older name `ticketgate` is still accepted)
 (nullable fields, cross-field rules, grounded fields, PII detectors). Edit the YAML, then run
 `npm run gen:contracts`. Admins can also edit the contract on the admin page.
 
@@ -94,7 +94,7 @@ the production deploy.
 
 `src/vendor/contractgate/` is the ContractGate TypeScript local validator (MIT). See its
 [NOTICE](src/vendor/contractgate/NOTICE.md). Atlassian `@forge/*` packages are installed from npm
-under Atlassian's terms and are not vendored. TicketGate's own direct dependency is `yaml` (ISC).
+under Atlassian's terms and are not vendored. Ticket Contracts' own direct dependency is `yaml` (ISC).
 A few packages that come in through the Atlassian packages (`argparse`, Python-2.0; `glob` and
 related, BlueOak-1.0.0) are also not vendored.
 

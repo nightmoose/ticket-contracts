@@ -8,8 +8,8 @@ export async function onIssueCreated(event: { issue?: { key?: string } }) {
   try {
     await scanIssue(forgeDeps, key);
   } catch (e) {
-    console.error('ticketgate scan failed', key, (e as Error).message);
+    console.error('ticket-contracts scan failed', key, (e as Error).message);
     return;
   }
-  console.log('ticketgate scan ok', key);
+  console.log('ticket-contracts scan ok', key);
 }

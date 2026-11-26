@@ -1,6 +1,6 @@
-// Teamwork Graph write: each TicketGate decision becomes a provenance document linked to its Jira
-// work item. Needs an admin to connect the "TicketGate" connector once (Atlassian Administration >
-// Apps > Connected apps > TicketGate > Connections). Until then pushes are skipped, never fatal.
+// Teamwork Graph write: each Ticket Contracts decision becomes a provenance document linked to its Jira
+// work item. Needs an admin to connect the "Ticket Contracts" connector once (Atlassian Administration >
+// Apps > Connected apps > Ticket Contracts > Connections). Until then pushes are skipped, never fatal.
 import api, { route } from '@forge/api';
 import { kvs, WhereConditions } from '@forge/kvs';
 import { graph } from '@forge/teamwork-graph';
@@ -29,7 +29,7 @@ export async function pushRecords(records: ProvenanceRecord[]): Promise<GraphPus
   const at = new Date().toISOString();
   const conn = await getConnection();
   let out: GraphPushResult;
-  if (!conn) out = { at, ok: false, skipped: 'no Teamwork Graph connection yet (admin must connect the TicketGate connector)' };
+  if (!conn) out = { at, ok: false, skipped: 'no Teamwork Graph connection yet (admin must connect the Ticket Contracts connector)' };
   else if (!records.length) out = { at, ok: true, accepted: 0 };
   else {
     const base = await getSiteUrl();
@@ -47,8 +47,8 @@ export async function pushRecords(records: ProvenanceRecord[]): Promise<GraphPus
     };
   }
   await kvs.set(LAST_KEY, out);
-  if (out.ok) console.log(`ticketgate twg push ok accepted=${out.accepted}`);
-  else console.log(`ticketgate twg push ${out.skipped ? 'skipped' : 'failed'}: ${out.skipped ?? out.error ?? JSON.stringify(out.rejected)}`);
+  if (out.ok) console.log(`ticket-contracts twg push ok accepted=${out.accepted}`);
+  else console.log(`ticket-contracts twg push ${out.skipped ? 'skipped' : 'failed'}: ${out.skipped ?? out.error ?? JSON.stringify(out.rejected)}`);
   return out;
 }
 
@@ -57,7 +57,7 @@ export async function onDecision(r: ProvenanceRecord) {
   try {
     await pushRecords([r]);
   } catch (e) {
-    console.log(`ticketgate twg push error: ${(e as Error).message}`);
+    console.log(`ticket-contracts twg push error: ${(e as Error).message}`);
   }
 }
 
@@ -99,7 +99,7 @@ interface ConnectionChange { action: 'CREATED' | 'UPDATED' | 'DELETED'; name: st
 
 export async function onConnectionChange(event: ConnectionChange | { body?: ConnectionChange }) {
   const e = ('body' in event && event.body ? event.body : event) as ConnectionChange;
-  console.log(`ticketgate twg connection ${e.action}`);
+  console.log(`ticket-contracts twg connection ${e.action}`);
   if (e.action === 'DELETED') {
     await kvs.delete(CONN_KEY);
     return { success: true };

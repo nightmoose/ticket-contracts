@@ -129,12 +129,12 @@ export async function explainHold(deps: Deps, args: { issueKey?: string; recordI
     const ordered = orderRecords(await deps.store.issueRecords(args.issueKey));
     const latest = ordered[0];
     if (latest && (latest.status === 'written' || latest.status === 'released')) {
-      return `${args.issueKey}: the latest TicketGate decision is ${latest.status.toUpperCase()} (${latest.agent}, ${latest.at}); nothing is held now. ` +
+      return `${args.issueKey}: the latest Ticket Contracts decision is ${latest.status.toUpperCase()} (${latest.agent}, ${latest.at}); nothing is held now. ` +
         `${ordered.filter((r) => 'supersededBy' in r).length} earlier held proposal(s) were superseded.`;
     }
     rec = ordered.find((r) => r.status === 'held' || r.status === 'rejected');
   }
-  if (!rec) return args.issueKey ? `No held TicketGate proposals for ${args.issueKey}.` : 'Record not found.';
+  if (!rec) return args.issueKey ? `No held Ticket Contracts proposals for ${args.issueKey}.` : 'Record not found.';
   const res = rec.result;
   const lines = [
     `${rec.issueKey}: proposal from ${rec.agent} (${rec.source}) at ${rec.at} was ${rec.status.toUpperCase()} under contract ${res.contract.name}@${res.contract.version}.`,
@@ -191,9 +191,9 @@ export function agentReply(r: ProvenanceRecord) {
   const status = (s: string) => Object.entries(res.fieldStatus).filter(([, v]) => v === s).map(([f]) => f);
   const held = res.violations.map((v) => ({ field: v.field, check: v.check, reason: v.message }));
   const tellUser = r.status === 'written'
-    ? `TicketGate wrote ${Object.keys(res.fields).length} fields to ${r.issueKey}` +
+    ? `Ticket Contracts wrote ${Object.keys(res.fields).length} fields to ${r.issueKey}` +
       (status('masked').length ? `, masking personal data in ${status('masked').join(', ')}` : '') + '. Nothing was held.'
-    : `TicketGate held this proposal, so nothing was written to ${r.issueKey}. ` +
+    : `Ticket Contracts held this proposal, so nothing was written to ${r.issueKey}. ` +
       held.map((h) => `${h.field}: ${h.reason}`).join('; ') + '.';
   return {
     decision: r.status === 'written' ? 'WRITTEN' : 'HELD',
@@ -212,7 +212,7 @@ export function agentReply(r: ProvenanceRecord) {
 }
 
 /**
- * The ticket as the agent should read it before proposing: the text TicketGate grounds against
+ * The ticket as the agent should read it before proposing: the text Ticket Contracts grounds against
  * (with PII masked, since no proposed field needs it) and the field rules from the contract.
  */
 export async function readTicket(deps: Deps, args: { issueKey: string; contract?: string }) {
@@ -265,7 +265,7 @@ export function readFirstReply(issueKey: string, why: string) {
     held: [],
     reason: why,
     nextStep: `Call read-ticket-for-fields for ${issueKey} now, build the fields only from its ticketText, then call propose-ticket-fields again with its readId.`,
-    tellUser: `I need to read ${issueKey} through TicketGate before proposing fields. Nothing was written. Reading it now.`,
+    tellUser: `I need to read ${issueKey} through Ticket Contracts before proposing fields. Nothing was written. Reading it now.`,
   };
 }
 

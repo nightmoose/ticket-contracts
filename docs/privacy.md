@@ -4,8 +4,8 @@ This is a draft of the privacy policy for the Ticket Contracts Forge app. It is 
 URL yet. A Marketplace listing needs a hosted privacy-policy link; publishing that URL is an
 Alex-only step. Do not treat this file as already live.
 
-Operator name on the public listing should be confirmed before this is hosted (recommended
-display name: NightMoose; legal entity on Atlassian verification forms: NightMoose, Inc.).
+The public partner name is NightMoose. The legal entity on Atlassian verification forms is
+NightMoose, Inc.
 
 Last updated: 26 November 2026.
 

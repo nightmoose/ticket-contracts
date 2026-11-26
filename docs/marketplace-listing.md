@@ -6,6 +6,10 @@ the copy and the Alex-only checklist, taken from the live Atlassian docs cited b
 
 **Listing name:** Ticket Contracts (16/60 characters)
 
+**Partner / publisher (public, 40-character limit):** NightMoose (9/40)
+
+**Legal entity (Identity Information / verification form):** NightMoose, Inc.
+
 **Tagline:** Agents read context. Who checks what they write? (48/130)
 
 **Summary:** Validates the structured fields an AI agent proposes for a support ticket. It checks the data contract, confirms IDs and amounts appear in the ticket text, masks personal data, and holds anything that fails for a person to review. (230/250)
@@ -147,27 +151,33 @@ and [Partner due diligence](https://developer.atlassian.com/platform/marketplace
    the listed app. Official Codegeist guidance is to give judges an unlicensed copy via an
    installation link. Create and keep that link (or a copy of the app) **before** submitting
    the listing.
-2. Log in to [marketplace.atlassian.com](https://marketplace.atlassian.com/) with your
-   Atlassian account (the nightmoose developer account).
-3. **Create a partner profile.** The docs still say an individual developer without a parent
-   company should create the profile under their own name (for example, "Alex Suarez"), not
-   an employer. Accept the developer terms. This must be you, not an agent.
+2. Log in to [marketplace.atlassian.com](https://marketplace.atlassian.com/) with the
+   existing Forge developer account that owns the Ticket Contracts app.
+3. **Publish the Developer Space / partner profile.** Use **NightMoose** as the public
+   partner and Developer Space name (set it before publishing; it is not editable from
+   Settings afterward). Accept the Marketplace Partner Agreement and billing consent
+   yourself — this must be you, not an agent. Publishing cannot be undone. A payment card
+   is not required if Forge usage stays under the free threshold.
 4. **Partner Verification (since 2 June 2025).** Anyone who wants to upload an app is given
-   a Partner Verification ticket. It asks for a **registered business entity** (business
-   name, physical address, registration number and/or tax ID) and identity verification of
-   the primary contact through Stripe Identity (government ID and a selfie, on a phone).
-   Community reports say a personal-only profile often cannot finish publishing. If you do
-   not have a registered business, stop and decide how to proceed; do not invent an entity.
-   This may affect the Marketplace bonus timing (the review-ticket link is enough for
-   Codegeist once a listing is submitted).
-5. Turn on **sharing** for the app in the developer console, then follow "publish the
-   developer space" / create the Marketplace listing for this Forge app.
+   a Partner Verification ticket. On the Identity Information form, use **NightMoose, Inc.**
+   as the legal entity (business name, physical address, registration number and/or tax ID).
+   The primary contact then completes Stripe Identity (government ID and a selfie, on a
+   phone) within 14 days. An existing Stripe account does not complete that check. The
+   review-ticket link is enough for the Codegeist Marketplace bonus once a listing is
+   submitted.
+5. Turn on **sharing** for the app in the developer console (and keep a separate unlicensed
+   judge copy) **before** submitting the listing, then create the Marketplace listing for
+   this Forge app.
 6. Publish a **privacy policy** URL and an **end-user agreement** (Atlassian's standard
    customizable agreement is an option). Fill the Privacy & Security tab with the answers
    above. Add a support contact and a working support URL.
-7. Add branding: app icon, screenshots (1840×900) and the three highlight crops (580×330)
-   with captions. A short demo clip (under 30 seconds on the listing; the Codegeist video is
-   separate and may be up to 5 minutes) is recommended.
+7. Add branding: the logo and banner in [docs/marketplace/](marketplace/README.md)
+   (`logo-144x144.png`, `banner-1120x548.png`), plus screenshots (1840×900) and the three
+   highlight crops (580×330) with captions. Recapture production screenshots if they still
+   show the old TicketGate DEV badge (`python3 scripts/crop_listing.py` after placing
+   captures in `/workspace/ticketgate-verify/prod`). A short demo clip (under 30 seconds
+   on the listing; the Codegeist video is separate and may be up to 5 minutes) is
+   recommended.
 8. When submitting, be ready to explain each API scope and to confirm there are no remote
    hosts. Keep the listing **free**. Do not enable licensing in the manifest.
 9. Submit for review. Atlassian aims to decide in about a week (plan around 5–10 business

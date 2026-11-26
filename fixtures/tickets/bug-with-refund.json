@@ -1,0 +1,19 @@
+{
+  "name": "Bug ticket where the agent fills refund 0: held by the null-unless rule",
+  "ticket": {
+    "key": "SUP-44",
+    "summary": "Export button crashes",
+    "description": "Ticket T-9001. Free plan. The CSV export button crashes the page every time since yesterday."
+  },
+  "proposal": {
+    "ticket_id": "T-9001",
+    "customer_tier": "free",
+    "category": "bug",
+    "severity": 3,
+    "order_ref": null,
+    "refund_amount_usd": 0,
+    "language": "en",
+    "summary": "CSV export button crashes the page."
+  },
+  "expect": { "decision": "held", "violations": [{ "check": "rule", "field": "refund_amount_usd" }, { "check": "grounding", "field": "refund_amount_usd" }] }
+}

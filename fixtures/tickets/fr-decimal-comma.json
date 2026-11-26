@@ -1,0 +1,19 @@
+{
+  "name": "French ticket with a decimal-comma amount and euro sign: grounded",
+  "ticket": {
+    "key": "SUP-45",
+    "summary": "Remboursement abonnement",
+    "description": "Bonjour, client enterprise, ticket T-7710. Commande ORD-550012 facturée deux fois : merci de rembourser 1.249,50 €."
+  },
+  "proposal": {
+    "ticket_id": "T-7710",
+    "customer_tier": "enterprise",
+    "category": "billing",
+    "severity": 1,
+    "order_ref": "ORD-550012",
+    "refund_amount_usd": 1249.5,
+    "language": "fr",
+    "summary": "Order ORD-550012 billed twice; refund requested."
+  },
+  "expect": { "decision": "pass", "violations": [] }
+}

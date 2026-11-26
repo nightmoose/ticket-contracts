@@ -176,6 +176,8 @@ permissions:
     - read:jira-work
     - write:jira-work
     - storage:app
+    - read:graph:issue:jira
+    - read:graph:user:atlassian
 
 app:
   id: ari:cloud:ecosystem::app/0e5d23f1-5def-4716-bd77-8e05356d98d6

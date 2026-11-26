@@ -4,6 +4,7 @@ import { forgeDeps } from './forge-deps';
 import { saveContractSource } from './kvs-store';
 import { loadContract } from '../guard';
 import { CONTRACTS } from '../contracts.generated';
+import { reporterTickets } from './twg';
 
 const resolver = new Resolver();
 
@@ -11,6 +12,16 @@ resolver.define('getIssueState', async ({ context }) => {
   const key = (context as { extension?: { issue?: { key?: string } } }).extension?.issue?.key;
   if (!key) throw new Error('No issue in context');
   return issueState(forgeDeps, key);
+});
+
+resolver.define('getRelated', async ({ context }) => {
+  const key = (context as { extension?: { issue?: { key?: string } } }).extension?.issue?.key;
+  if (!key) throw new Error('No issue in context');
+  try {
+    return await reporterTickets(key);
+  } catch (e) {
+    return { ok: false, items: [], note: (e as Error).message };
+  }
 });
 
 resolver.define('resolveHeld', async ({ payload, context }) => {

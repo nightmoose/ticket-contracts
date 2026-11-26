@@ -1,0 +1,29 @@
+# Marketplace listing assets
+
+Screenshots sized for the Atlassian Marketplace listing, derived from existing
+`/workspace/ticketgate-verify` captures. They are placeholders until we recapture
+them on the production install.
+
+Required sizes come from
+[Building your presence on Marketplace](https://developer.atlassian.com/platform/marketplace/building-your-presence-on-marketplace/):
+primary highlights at 1840×900, cropped highlights at 580×330.
+
+| Highlight | 1840×900 | 580×330 | Source | Suggested caption |
+|---|---|---|---|---|
+| 1. Hold values the ticket never said | [highlight-1-held-1840x900.png](highlight-1-held-1840x900.png) | [highlight-1-held-580x330.png](highlight-1-held-580x330.png) | `2_SUP-5_panel_held.png` | A $900 refund that does not appear in the ticket is held, and nothing is written. |
+| 2. Mask personal data before it lands | [highlight-2-masked-1840x900.png](highlight-2-masked-1840x900.png) | [highlight-2-masked-580x330.png](highlight-2-masked-580x330.png) | `1_SUP-3_panel_top_masked.png` | Personal data in the ticket is masked before accepted fields are stored. |
+| 3. Explain every decision | [highlight-3-explain-1840x900.png](highlight-3-explain-1840x900.png) | [highlight-3-explain-580x330.png](highlight-3-explain-580x330.png) | `6_confirm_card.png` | Rovo Chat explains what was written or held, in plain language. |
+
+## Why these need a fresh capture
+
+All three sources still show the pre-rename **TicketGate DEV** panel badge. The current
+production build titles the panel **Ticket Contracts** and is a production environment (no
+DEV badge). Recapture on https://one-atlas-jgqw.atlassian.net after the production install,
+on SUP-5 (held), SUP-3 (masked write), and a Rovo confirm or reply, including the Jira
+chrome and the decision text in the same frame.
+
+Crop coordinates are recorded in [SOURCES.txt](SOURCES.txt).
+
+Still needed before submit (not produced here): 144×144 app logo and 1120×548 (or
+560×274) app banner. A short listing video (under 30 seconds) is recommended and is
+separate from the Codegeist demo video.

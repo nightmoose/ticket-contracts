@@ -122,9 +122,16 @@ work item or store entries remain. Uninstalling the app removes the app's Forge 
 Issue properties on the work item remain until someone deletes them. When an admin
 disconnects the Teamwork Graph connector, Atlassian deletes the ingested documents.
 
-A public privacy policy URL and an end-user agreement are still required for the listing.
-Atlassian offers a standard, customizable end-user agreement. Those documents have not been
-published yet; that is an Alex-only step below.
+A draft privacy policy is in [docs/privacy.md](privacy.md). It still needs a public URL
+before the listing can be submitted. For the end-user agreement, adopt Atlassian's standard
+customizable agreement (the Bonterms Standard End User Agreement, Version 1.0):
+https://developer.atlassian.com/platform/marketplace/list-customizable-end-user-agreement/
+(agreement text: https://www.atlassian.com/licensing/marketplace/end-user-agreement-v1).
+Opting in on the listing is an Alex-only step.
+
+Placeholder screenshots at the required sizes are in [docs/marketplace/](marketplace/README.md).
+They still show the old TicketGate DEV badge and should be recaptured on the production
+install before submit.
 
 ## Alex-only steps (do not do these in this PR)
 

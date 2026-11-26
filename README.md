@@ -36,6 +36,7 @@ Work in progress for Codegeist 2026.
 | Rovo agent | invokes the actions in Rovo Chat and relays held/written reasons; read-before-propose is enforced with a readId (see [docs/rovo-agent.md](docs/rovo-agent.md)) |
 | External MCP client | verified with `mcp-remote-client` (MIT): all five tools listed; read then a held propose on SUP-6 (see [docs/mcp.md](docs/mcp.md)) |
 | Marketplace and Codegeist drafts | [docs/marketplace-listing.md](docs/marketplace-listing.md) and [docs/submission-draft.md](docs/submission-draft.md) (not submitted) |
+| Privacy policy draft and listing screenshots | [docs/privacy.md](docs/privacy.md); sized assets in [docs/marketplace/](docs/marketplace/README.md) (recapture on production before submit) |
 
 ## Forge modules
 

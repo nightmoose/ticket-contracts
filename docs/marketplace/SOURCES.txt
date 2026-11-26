@@ -1,0 +1,11 @@
+Listing screenshots prepared from /workspace/ticketgate-verify captures.
+These still show the pre-rename "TicketGate DEV" panel badge. Recapture on the
+production install (panel title is now Ticket Contracts, no DEV badge) before
+submitting the Marketplace listing.
+
+highlight-1-held-1840x900.png (1840, 900) from 2_SUP-5_panel_held.png crop(40,0,1880,900)
+highlight-1-held-580x330.png (580, 330) from 2_SUP-5_panel_held.png box=(248, 268, 1040, 592)
+highlight-2-masked-1840x900.png (1840, 900) from 1_SUP-3_panel_top_masked.png crop(40,172,1880,1072)  # shifted down so the masked summary stays in frame
+highlight-2-masked-580x330.png (580, 330) from 1_SUP-3_panel_top_masked.png box=(248, 400, 1040, 592)  # shifted down to include masked summary
+highlight-3-explain-1840x900.png (1840, 900) from 6_confirm_card.png crop(40,0,1880,900)
+highlight-3-explain-580x330.png (580, 330) from 6_confirm_card.png box=(248, 430, 1670, 640)

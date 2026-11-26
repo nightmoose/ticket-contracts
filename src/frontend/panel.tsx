@@ -11,6 +11,7 @@ interface Rec {
   id: string; agent: string; source: string; at: string; status: Status;
   result: { decision: string; contract: { name: string; version: string }; violations: Violation[]; evidence: Evidence[]; fields: Record<string, unknown>; fieldStatus: Record<string, string> };
 }
+interface Related { ok: boolean; items: { key: string; summary: string }[]; note?: string }
 interface State { issueKey: string; records: Rec[]; scan: { pii: { kind: string; masked: string }[]; at: string } | null }
 
 const appearance: Record<Status, 'success' | 'moved' | 'inprogress' | 'removed'> = {
@@ -58,6 +59,8 @@ function RecordView({ rec, onResolve }: { rec: Rec; onResolve: (id: string, a: '
 function App() {
   const [state, setState] = useState<State | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [related, setRelated] = useState<Related | null>(null);
+  useEffect(() => { call<Related>('getRelated').then(setRelated).catch(() => setRelated({ ok: false, items: [], note: 'Teamwork Graph unavailable' })); }, []);
   const load = () => call<State>('getIssueState').then(setState).catch((e) => setError(String(e)));
   useEffect(() => { load(); }, []);
   const onResolve = (recordId: string, action: 'release' | 'reject') =>
@@ -75,6 +78,12 @@ function App() {
       )}
       {!latest && <Text>No agent proposals yet. Ask the Ticket Intake agent to fill this ticket's fields.</Text>}
       {latest && <RecordView rec={latest} onResolve={onResolve} />}
+      <Stack space="space.050">
+        <Heading size="xsmall">Other tickets from this reporter (Teamwork Graph)</Heading>
+        {!related && <Spinner size="small" label="Loading" />}
+        {related && related.items.map((t) => <Text key={t.key}>{t.key}: {t.summary}</Text>)}
+        {related && related.note && <Text>{related.note}</Text>}
+      </Stack>
       {older.length > 0 && (
         <Box>
           <Heading size="xsmall">Earlier proposals</Heading>
